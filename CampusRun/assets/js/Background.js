@@ -1,21 +1,37 @@
 function Background(ctx, img)
 {
-	offset = 0;
+	//Default settings
+	this.frames = 500; //number of frames for scrolling canvas-width
 	
-	//default settings
-	this.speed = 1;
+	var speed = ctx.canvas.width/this.frames;	
+	var offset = 0;
 	
-	//functions
-	this.draw = function()
+	//OnCnvsProperties
+	var widthOnCnvs;
+	var heightOnCnvs;
+	var noImages;
+	setOnCnvsProperties();
+	
+	Background.prototype.draw = function()
 	{
-		widthOnImg = img.width;
-		heightOnImg = img.height;
-		widthOnCnvs = (ctx.canvas.height/heightOnImg)*widthOnImg;
-		heightOnCnvs = ctx.canvas.height;
-		
 		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-		ctx.drawImage(img, 0, 0, widthOnImg, heightOnImg, 0-offset, 0, widthOnCnvs, heightOnCnvs);
-		ctx.drawImage(img, 0, 0, widthOnImg, heightOnImg, widthOnCnvs-offset, 0, widthOnCnvs, heightOnCnvs);
-		offset = (offset > widthOnCnvs) ? 0 : offset+this.speed;
+		for (var i=0; i <= noImages; i++) 
+		{
+			ctx.drawImage(img, 0, 0, img.width, img.height,
+						 (i*widthOnCnvs)-offset, 0, widthOnCnvs, heightOnCnvs);			
+		};
+		offset = (offset > widthOnCnvs) ? 0 : offset+speed;
+	}
+	
+	Background.prototype.resize = function()
+	{
+		setOnCnvsProperties();
+	}
+	
+	function setOnCnvsProperties()
+	{
+		widthOnCnvs = (ctx.canvas.height/img.height)*img.width;
+		heightOnCnvs = ctx.canvas.height;
+		noImages = Math.ceil(img.width/ctx.canvas.width);		
 	}
 }
